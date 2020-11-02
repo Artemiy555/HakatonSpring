@@ -1,0 +1,34 @@
+enum stringType {
+LOW_CASE_ENG,
+UP_CASE_ENG,
+CAMEL_CASE_ENG,
+case ENG_NUM,
+NUMBERS,
+ALL,
+CYRILLIC,
+SIGN
+}
+
+public String randomString (stringType strT, int length){
+char[] chars=
+switch (str){
+case LOW_CASE_ENG: "abcdefghijklmnopqrstuvwxyz".toCharArray(); break;
+case UP_CASE_ENG: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray(); break;
+case CAMEL_CASE_ENG: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray(); break;
+case ENG_NUM: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray(); break;
+case NUMBERS: "1234567890".toCharArray(); break;
+case ALL: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890~!@#$%^&*()_+=?|\".toCharArray(); break;
+case CYRILLIC: "абвгдеёжзийклмнопрстуфхцчшщъыьэюя".toCharArray(); break;
+case SIGN: "~!@#$%^&*()_+=?|".toCharArray(); break;
+}
+StringBuilder sb = new StringBuilder(length);
+Random random = new Random();
+for (int i = 0; i < length; i++) {
+       char c = chars[random.nextInt(chars.length)];
+       sb.append(c);
+}
+return sb.toString();}
+
+
+// min valid username randomString(CAMEL_CASE_ENG, 5)
+// min valid email randomString(ENG_NUM, 5)

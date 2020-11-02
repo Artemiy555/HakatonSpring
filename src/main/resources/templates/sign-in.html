@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title data-at="AUTtitle">LuckyGame</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          type="text/css">
+</head>
+<body>
+<nav class="navbar navbar-dark navbar-expand-lg navbar-light bg-success mb-5">
+    <a class="navbar-brand text-white" href="https://deveducation.com/ua/">LuckyGame</a>
+</nav>
+<form id="form" class="row justify-content-center w-25 bg-white h-auto m-auto p-2 rounded border border-secondary"
+      action="/home" method="GET" target="defame">
+    <div class="form-group">
+        <label for="email" class="sr-only">Username</label>
+        <input data-at="AUTemailInput" type="text" class="form-control" placeholder="Username" id="email" name="email" required
+               autofocus>
+    </div>
+    <div class="form-group">
+        <label for="password" class="sr-only">Password</label>
+        <input data-at="AUTpassInput" type="password" class="form-control" placeholder="Password" id="password" name="password" required>
+    </div>
+    <div class="w-100"></div>
+    <input data-at="AUTsignInBtn" type=submit onclick="login()" form="form" value="Log In"/>
+    <div class="w-100"></div>
+    <a data-at="AUTsignUpBtn" href="/sign-up">Sing up</a>
+</form>
+<iframe name="defame" id="defame" style="display: none;"></iframe>
+
+<script>
+    function login() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/auth/signin");
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify({"email": email, "password": password}))
+        xhr.onreadystatechange = function () {
+            if (this.status === 200) {
+                const dataToStore = JSON.parse(this.responseText);
+                sessionStorage.setItem('token', dataToStore.accessToken);
+                window.location.href = "/home";
+
+            }
+        };
+
+    };
+
+
+
+
+</script>
+</body>
+</html>

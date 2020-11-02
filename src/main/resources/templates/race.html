@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>LuckyGame</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style>
+        .center {
+            width: 600px; /* Ширина элемента в пикселах */
+            padding: 10px; /* Поля вокруг текста */
+            margin: auto; /* Выравниваем по центру */
+        }
+
+        #content {
+            top: 20px; /* Расстояние от верхнего края */
+            left: 20px; /* Расстояние от левого края */
+            bottom: 0;
+            right: 0;
+        }
+
+        label {
+            display: block;
+            font: 1rem 'Fira Sans', sans-serif;
+        }
+
+        input,
+        label {
+            margin: .4rem 0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          type="text/css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+<nav class="navbar navbar-dark navbar-expand-lg navbar-light bg-success mb-5">
+    <a class="navbar-brand text-white" href="https://deveducation.com/ua/">LuckyGame</a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <div class="center">
+                <div class="form-group">
+                    <select id="game" onchange="redirectIfSuccess()" name="game" class="form-control">
+                        <option selected>Horse Racing</option>
+                        <option>Balls</option>
+                        <option>Cards</option>
+                        <option>RSP</option>
+                        <option>Tic-Tac-Toe</option>
+                    </select>
+                </div>
+        </div>
+
+        <!--<label text="${balance} mr-md-3" class="mr-md-3">Balance:</label>-->
+        <tr><label text="${balance} mr-md-3" class="mr-md-3">Balance:</label>
+            <td th:text="${balance}"></td>
+        </tr>
+        <a onclick="redirectToMyAccount()" class="btn btn-primary mr-md-3">My Account</a>
+        <a onclick="logOut()" class="btn btn-primary">log out</a>
+    </div>
+</nav>
+<div id="allGames">
+
+</div>
+<!--<p class="text-center h3">My Account</p>
+<form id="form" class="jrow justify-content-center mb-5">
+    <div id="content" class="input-group mb-3 ">
+        <div class="input-group-append">
+            <p>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQChEtddS00Q9ZiF_c8LJZhjCEE4mT3DQrXOA&usqp=CAU">
+            </p>
+        </div>
+        <div class="btn-group-vertical input-group-append">
+            <input type=submit onclick="deposit()" form="form" value="Deposit"/>
+            <input type=submit onclick="rating()" form="form" value="Rating"/>
+            <input type=submit onclick="change()" form="form" value="Change"/>
+        </div>
+        <div class="input-group-append ">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Wins</th>
+                    <th scope="col">Loses</th>
+                    <th scope="col">Earnings</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row"></th>
+                    <td th:text="${name}"></td>
+                    <td th:text="${wins}"></td>
+                    <td th:text="${loses}"></td>
+                    <td th:text="${earnings}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Money</th>
+                    <th scope="col">Time</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row"></th>
+                    <td th:text="${name}"></td>
+                    <td th:text="${wins}"></td>
+                    <td th:text="${loses}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="input-group">
+            <div class="input-group-vertical">
+                <div class="form-group">
+                    <label for="currentPassword" class="sr-only">Enter your password</label>
+                    <input data-at="" type="password" class="form-control" placeholder="Enter your password"
+                           id="currentPassword" name="currentPassword" required
+                           autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword" class="sr-only">Enter new password</label>
+                    <input data-at="" type="password" class="form-control" placeholder="Enter new password"
+                           id="newPassword" name="newPassword" required
+                           autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword" class="sr-only">Confirm new password</label>
+                    <input data-at="" type="password" class="form-control" placeholder="Confirm new password"
+                           id="confirmNewPassword" name="confirmNewPassword" required>
+                </div>
+                <div>
+                    <div class="form-group mr-2">
+                        <label for="Age">Age:</label>
+                        <output class="Age" id="age" name="age">
+                            &lt;!&ndash;<div class="result"></div&ndash;&gt;
+                    </div>
+                    <div class="form-group mr-2">
+                        <label for="dateOfBirthday">Start date:</label>
+
+                        <input class="date" type="date" id="dateOfBirthday" name="dateOfBirthday"
+                               value=""
+                               min="1900-01-01" max="2050-12-31">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>-->
+<script>
+    function login() {
+        /*const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/api/auth/signin");
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send(JSON.stringify({"email": email, "password": password}))
+        xhr.onreadystatechange = function () {
+            if (this.status === 200) {
+                const dataToStore = JSON.stringify(this.responseText);
+                sessionStorage.setItem('token', dataToStore);
+                window.location.href = "/home";
+
+            }
+        };*/
+    };
+
+    function redirectIfSuccess() {
+        const redirectToGame = document.getElementById("game").value;
+        switch (redirectToGame) {
+            case "Tic-Tac-Toe":
+                let xhr = new XMLHttpRequest();
+                xhr.open("GET", "/ttt");
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.send()
+                xhr.onreadystatechange = function () {
+                    if (this.status === 200) {
+                        // document.getElementById("allGames").innerHTML = '<object type="text/html" data="ttt.html" ></object>';
+                        window.location.href = "/ttt"
+                    };
+
+                };
+        }
+        /*const loginResponse = login();
+        const dataToStore = JSON.stringify(response.text());
+        sessionStorage.setItem('token', dataToStore);
+        fetch("/home");*/
+    };
+function redirectToMyAccount(){
+    window.location.href = "/myAccount?token="+sessionStorage.getItem("token");
+    /*// const uid = sessionStorage.getItem("token");
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", "/myAccount");
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send()
+    xhr.onreadystatechange = function () {
+        if (this.status === 200) {
+            // document.getElementById("allGames").innerHTML = '<object type="text/html" data="ttt.html" ></object>';
+        //     window.location.href = "/myAccount"*/
+        // };
+}
+
+
+    function logOut() {
+        sessionStorage.removeItem('token');
+        window.location.href = "/";
+    };
+
+    // function deposit() {
+    //     sessionStorage.removeItem('token');
+    //     window.location.href = "/";
+    // };
+    //
+    // function rating() {
+    //     sessionStorage.removeItem('token');
+    //     window.location.href = "/";
+    // };
+    //
+    // function change() {
+    //     sessionStorage.removeItem('token');
+    //     window.location.href = "/";
+    // };
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>LuckyGame</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<!--	<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+	
+<!--	<title>TicTacToe</title>-->
+	
+	<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/webjars/font-awesome/css/font-awesome.min.css">
+	<link href="/main.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		  type="text/css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="/webjars/tether/dist/js/tether.min.js"></script>
+	<script src="/webjars/popper.js/dist/umd/popper.min.js"></script>
+	<script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+	<script src="/webjars/sockjs-client/sockjs.min.js"></script>
+	<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+	<script src="/app.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-dark navbar-expand-lg navbar-light bg-success mb-5">
+	<a class="navbar-brand text-white" href="https://deveducation.com/ua/">LuckyGame</a>
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+		<div class="center">
+			<div class="form-group">
+				<select id="game" onchange="redirectIfSuccess()" name="game" class="form-control">
+					<option selected>Horse Racing</option>
+					<option>Balls</option>
+					<option>Cards</option>
+					<option>RSP</option>
+					<option>Tic-Tac-Toe</option>
+				</select>
+			</div>
+		</div>
+
+		<!--<label text="${balance} mr-md-3" class="mr-md-3">Balance:</label>-->
+		<tr><label text="${balance} mr-md-3" class="mr-md-3">Balance:</label>
+			<td th:text="${balance}"></td>
+		</tr>
+		<a onclick="redirectToMyAccount()" class="btn btn-primary mr-md-3">My Account</a>
+		<a onclick="logOut()" class="btn btn-primary">log out</a>
+	</div>
+</nav>
+	<noscript>
+		<h2 style="color: #ff0000">Seems your browser doesn't support
+			Javascript! Please enable Javascript and reload this page!</h2>
+	</noscript>
+	
+	<div id="menu" class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h1>Tic Tac Toe</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="form-inline float-lg-right">
+					<div class="form-group">
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createGameModal">
+							Create Game
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<table id="gamelist" class="table table-striped">
+					<thead>
+						<tr>
+							<th>
+								<div class="col-md-6">
+									<button id="refresh" class="btn btn-primary btn-sm">
+										<span class="fa fa-refresh"></span> Refresh
+									</button>
+									<span>&nbsp;Available Games</span>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody id="games">
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Tic Tac Toe Board -->
+	<div id="tictactoe" class="container" style="display: none;">
+		<div class="row">
+			<div class="col-xs centered">
+				<span id="status" class="status"></span>
+				<br/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs centered">
+				<span id="status2" class="status"></span>
+				<br/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs centered">
+				<table id="board">
+					<tr>
+						<td id="00" class="" x="0" y="0"></td>
+						<td id="01" class="v" x="0" y="1"></td>
+						<td id="02" class="" x="0" y="2"></td>
+					</tr>
+					<tr>
+						<td id="10" class="h" x="1" y="0"></td>
+						<td id="11" class="v h" x="1" y="1"></td>
+						<td id="12" class="h" x="1" y="2"></td>
+					</tr>
+					<tr>
+						<td id="20" class="" x="2" y="0"></td>
+						<td id="21" class="v" x="2" y="1"></td>
+						<td id="22" class="" x="2" y="2"></td>
+					</tr>
+				</table>
+				<br/><br/>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs centered">
+				<button class="btn btn-danger" type="submit" data-toggle="modal" data-target="#disconnectModal">Disconnect</button>
+				<button id="rematch" class="btn btn-success" type="submit" disabled="disabled">Rematch</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Create Game Modal -->
+	<div class="modal fade" id="createGameModal" tabindex="-1" role="dialog" aria-labelledby="createGameModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="createGameModalLabel">Create Game</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<input type="text" id="gamename" class="form-control" placeholder="Game name here...">
+					<input type="number" id="bet" class="form-control" placeholder="Bet...">
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button id="create" type="button" class="btn btn-success">Create Game</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Disconnect Confirmation Modal -->
+	<div class="modal fade" id="disconnectModal" tabindex="-1" role="dialog" aria-labelledby="disconnectModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="disconnectModalLabel">Are you sure?</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<span>Are you sure you want to leave the game?</span>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button id="disconnect" type="button" class="btn btn-danger">Leave</button>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>
+function logOut() {
+sessionStorage.removeItem('token');
+window.location.href = "/";
+};
+
+function redirectToMyAccount() {
+	window.location.href = "/myAccount?token=" + sessionStorage.getItem("token");
+};
+</script>
+</body>
+</html>
