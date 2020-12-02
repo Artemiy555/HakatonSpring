@@ -22,8 +22,6 @@ public class GameController {
 	@Autowired
 	private GameStateRepository repository;
 
-
-
 	@MessageMapping("/move/{id}")
 	@SendTo("/ttt/gamestate/{id}")
 	public GameStateModel gamestate(@DestinationVariable String id, PlayerMoveMessage move) throws Exception {
